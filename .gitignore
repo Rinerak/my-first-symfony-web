@@ -1,4 +1,9 @@
 
+# Environment files
+.env
+.env.*
+!.env.example
+
 ###> symfony/framework-bundle ###
 /.env.local
 /.env.local.php
@@ -8,3 +13,22 @@
 /var/
 /vendor/
 ###< symfony/framework-bundle ###
+
+# Logs
+*.log
+
+# IDE specific files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Dependency directories
+/node_modules/
+/bower_components/
+
+# Build files
+/build/
+
+# Local development files
+.phpunit.result.cache
