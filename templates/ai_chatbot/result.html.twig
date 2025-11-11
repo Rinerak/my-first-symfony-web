@@ -34,6 +34,10 @@
 
             {# Akcie #}
             <div class="d-grid gap-2">
+                <button id="save-chat-btn" class="btn btn-success btn-lg">
+                    <i class="bi bi-floppy"></i> Uložiť túto konverzáciu
+                </button>
+                
                 <a href="{{ path('ai_chatbot') }}" class="btn btn-primary">
                     <i class="bi bi-arrow-left"></i> Nová otázka
                 </a>
@@ -49,4 +53,41 @@
     white-space: pre-wrap;
 }
 </style>
+
+<script>
+async function saveChat() {
+    const question = {{ question|json_encode|raw }};
+    const answer = {{ answer|json_encode|raw }};
+    
+    try {
+        const response = await fetch('/api/chats', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                title: question.substring(0, 50) + (question.length > 50 ? '...' : ''),
+                messages: [
+                    { role: 'user', content: question },
+                    { role: 'assistant', content: answer }
+                ]
+            })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            alert('✅ Chat bol úspešne uložený!');
+            document.getElementById('save-chat-btn').disabled = true;
+            document.getElementById('save-chat-btn').textContent = '✅ Uložené';
+        } else {
+            alert('❌ Chyba: ' + data.error);
+        }
+    } catch (error) {
+        alert('❌ Chyba: ' + error.message);
+    }
+}
+
+document.getElementById('save-chat-btn').addEventListener('click', saveChat);
+</script>
 {% endblock %}
